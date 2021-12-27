@@ -76,25 +76,22 @@ def get_pie_chart(entered_site):
               [Input(component_id='site-dropdown', component_property='value'),
                Input(component_id='payload-slider', component_property='value')])
 
-def build_scatter(entered_site,slider_range):
-    #Taking Range in here
+def get_scatter(entered_site, slider_range):
     low, high = slider_range
-    #Selecting values between slider range
     mask = (spacex_df['Payload Mass (kg)'] > low) & (spacex_df['Payload Mass (kg)'] < high)
-    #Getting the filtered dataFrame
-    filtered_df = spacex_df[mask]
+    filter = spacex_df[mask]
     
-    #If we are showing all the sites
     if entered_site == 'ALL':
-        #Display all values for the variable
-        fig = px.scatter(filtered_df,x="Payload Mass (kg)", y="class", color="Booster Version Category", title='Payload vs. Outcome for All Sites')
+        fig = px.scatter(filter, x="Payload Mass (kg)", y="class", color="Booster Version Category", title='Payload vs. Outcome for All Sites')
         return fig
     else:
         print(entered_site)
-        filtered_df1= filtered_df[filtered_df['Launch Site'] == entered_site]
-        fig = px.scatter(filtered_df1, x="Payload Mass (kg)", y="class", color="Booster Version Category", title=f'Payload vs. Outcome for {entered_site}')
+        filter2 = filter[filter['Launch Site'] == entered_site]
+        title_current = 'Payload vs. Outcome for {}'.format(entered_site)
+        fig = px.scatter(filter2, x="Payload Mass (kg)", y="class", color="Booster Version Category", title=title_current)
         return fig
 
 # Run the app
 if __name__ == '__main__':
     app.run_server()
+
